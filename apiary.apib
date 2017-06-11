@@ -34,6 +34,7 @@ HOST: https://apiproxy-uat.ctripqa.com/apiproxy/soa2/13077/json/
 
 ## 调用方式 [POST /]
 所有请求均使用POST application/json形式。请求内容需转为json字符串后作为payload并签名后进行调用。
+签名规则 *sign=MD5(timestamp + sharedKey + payload + sharedKey)*,其中payload中的VendorCode和sharedKey需要携程分配。
 
 + Request (application/json)
     
