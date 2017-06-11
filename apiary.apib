@@ -1,0 +1,120 @@
+FORMAT: 1A
+HOST: https://apiproxy-uat.ctripqa.com/apiproxy/soa2/13077/json/
+
+
+# 供应商回调
+用于通知携程相关信息
+
+## Data Structures
+
+
+### CommonResponse (object)
+响应
+
++ code (string) - 响应代码，'000000'为成功，其他为失败 
++ message (string) - 错误提示，调用失败时的提示 
+
+
+### DailyStock (object)
+每日库存
+
+- stockDate: 2017-06-09 00:00:00 (string, required) - 库存日期
+- storeCode: shanghai001 (string, required) - 门店code
+- vehicleCode: BMW_A6 (string, required) - 车型code
+- stockCount: 100 (int, required) - 库存数量
+- stockType: 1 (int, required) - 库存类型 0总库存 1可用库存
+- lastUpdateTime: 2017-06-08 12:00:00 (string, required) - 上次更新时间
+
+    
+### DailyStockRequest (object)
+
+- vendorCode (string, required) - 供应商code
+- dailyStocks (array[DailyStock], required) - 每日库存数据
+
+
+## 调用方式 [POST /]
+所有请求均使用POST application/json形式。请求内容需转为json字符串后作为payload并签名后进行调用。
+
++ Request (application/json)
+    
+    + Attributes
+    
+        + payload (string, required) - 请求提json字符串
+        + timestamp (string, required) - unix时间戳
+        + sign (string, required) - 签名
+
+    + Body
+    
+            {
+                "payload": "{\"vendorCode\":\"13006\",...}",
+                "timestamp": "1495099632",
+                "sign": "539DF3D54E644729C0F821515D47264B"
+            }
+    
+
++ Response 200 (application/json)
+
+    + Attributes
+        + code (string) - 响应代码，'000000'为成功，其他为失败 
+        + message (string) - 错误提示，调用失败时的提示 
+
+    + Body
+    
+            {
+                "code": "00000",
+                "message": "OK"
+            }
+        
+
+
+## 更新每日库存 [POST /dailyStocks]
+通知携程更新每日库存
+
+
+
++ Request (application/json)
+
+    + Attributes ([DailyStockRequest][])
+    
+    + Body
+    
+            {
+                "vendorCode": "13006",
+                "dailyStocks": [{
+                    "stockDate": "2017-06-09 00:00:00",
+                    "storeCode": "sh001",
+                    "vehicleCode": "BENZ_MASTER",
+                    "stockCount": 123,
+                    "stockType": 1,
+                    "lastUpdateTime": "2017-06-08 12:45:00"
+                },{
+                    "stockDate": "2017-06-09 00:00:00",
+                    "storeCode": "sh001",
+                    "vehicleCode": "BENZ_SENIOR",
+                    "stockCount": 10,
+                    "stockType": 1,
+                    "lastUpdateTime": "2017-06-08 12:45:00"
+                },{
+                    "stockDate": "2017-06-09 00:00:00",
+                    "storeCode": "sh001",
+                    "vehicleCode": "BMW_A6",
+                    "stockCount": 0,
+                    "stockType": 1,
+                    "lastUpdateTime": "2017-06-08 12:45:00"
+                }]
+            }
+            
+
+            
++ Response 200 (application/json)
+
+    + Attributes
+        + code (string) - 响应代码，'000000'为成功，其他为失败 
+        + message (string) - 错误提示，调用失败时的提示 
+
+    + Body
+    
+            {
+                "code": "00000",
+                "message": "OK"
+            }
